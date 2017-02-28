@@ -6,7 +6,7 @@ var config = {
   user: 'sf179', //env var: PGUSER
   database: 'sf179', //env var: PGDATABASE
   password: 'So61IfRmm703', //env var: PGPASSWORD
-  host: '75.126.137.85', // Server hosting the postgres database
+  host: '75.126.173.142', // Server hosting the postgres database
   port: 5432, //env var: PGPORT
   max: 10, // max number of clients in the pool
   idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
@@ -24,14 +24,16 @@ pool.connect (function(err, client, done) {
     return console.error('Error fettching client from pool', err);
   }
 
-  client.query('SELECT $1::int AS number', ['1'], function(err, result) {
+  client.query('SELECT name FROM w_business', function(err, result) {
+    // client.query('SELECT schedule FROM w_menus', function(err, result) {
+
     // Call 'done()' to release the client back to the pool
     done();
 
     if (err) {
       return console.error('error running query', err);
     }
-    console.log(result.row[o].number);
+    console.log(result);
   });
 
 }); // END
@@ -42,6 +44,6 @@ pool.on('error', function(err, client) {
   // the client which emitted the original error
   // this is a rare occurrence but can happen if there is a network partition
   // between your application and the database, the database restarts, etc.
-  // and so you might want to handle it and at least log it out 
+  // and so you might want to handle it and at least log it out
   console.error('idel client error', err.message, err.stack);
 });
